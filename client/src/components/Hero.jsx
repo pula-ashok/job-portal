@@ -1,7 +1,17 @@
-import React from 'react'
+import React, { useContext, useRef } from 'react'
 import { assets } from '../assets/assets'
+import { AppContext } from './../context/AppContext';
 
 const Hero = () => {
+    const titleRef=useRef(null)
+    const locationRef=useRef(null)
+    const {setSearchedFilter,setIsSearched,searchedFilter}=useContext(AppContext)
+    const onSearch=()=>{
+        const title=titleRef.current.value
+        const location=locationRef.current.value
+        setSearchedFilter({title:title,location:location})
+        setIsSearched(true)
+    }
   return (
     <div className='container 2xl:px-20 mx-auto my-10'>
         <div className='bg-gradient-to-r from-purple-800 to-purple-950 text-white py-16 text-center mx-2 rounded-xl'>
@@ -10,13 +20,13 @@ const Hero = () => {
             <div className='flex items-center justify-between bg-white rounded text-gray-600 max-w-xl sm:mx-auto mx-4 pl-4'>
                 <div  className='flex items-center'>
                     <img  className="h-4 sm:h-5" src={assets.search_icon} alt='search'/>
-                    <input type="text" placeholder='Search for jobs'  className='max-sm:text-xs p-2 rounded outline-none w-full'/>
+                    <input type="text" placeholder='Search for jobs'  className='max-sm:text-xs p-2 rounded outline-none w-full' ref={titleRef}/>
                 </div>
                 <div className='flex items-center'>
                     <img className="h-4 sm:h-5"  src={assets.location_icon} alt='location'/>
-                    <input type="text" placeholder='Location' className='max-sm:text-xs p-2 rounded outline-none w-full' />
+                    <input type="text" placeholder='Location' className='max-sm:text-xs p-2 rounded outline-none w-full' ref={locationRef} />
                 </div>
-                <button className='bg-blue-600 px-6 py-2 rounded text-white m-1'>Search</button>
+                <button className='bg-blue-600 px-6 py-2 rounded text-white m-1' onClick={()=>onSearch()}>Search</button>
             </div>
         </div>
         <div className='border border-gray-300 shadow-md mx-2 mt-5 p-6 rounded-md flex'>
