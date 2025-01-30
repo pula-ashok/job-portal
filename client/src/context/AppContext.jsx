@@ -5,7 +5,7 @@ export const AppContext=createContext(null)
 const AppContextProvider=(props)=>{
     const value={}
     return <AppContext.Provider value={value}>
-        {props.children}
+        {pros.children}
     </AppContext.Provider>
 }
 export default AppContextProvider
