@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { AppContext } from '../context/AppContext'
-import { assets, JobCategories, JobLocations } from '../assets/assets';
+import { assets, JobCategories, JobLocations, jobsData } from '../assets/assets';
+import JobCard from './JobCard';
 
 const JobListing = () => {
     const {setSearchedFilter,setIsSearched,isSearched,searchedFilter}=useContext(AppContext)
@@ -15,13 +16,13 @@ const JobListing = () => {
               <h3 className='font-medium text-lg mb-4'>Current Search</h3>
               <div className='mb-4 text-gray-600'>
                 {searchedFilter.title && (
-                  <span className='inline-flex items-center gap-2.5 bg-blue-200 border border-blue-5onClick={e=>setSearchedFilter(prev=>({...prev,title:""}))}00 px-4 py-1.5 rounded'>
+                  <span className='inline-flex items-center gap-2.5 bg-blue-50 border border-blue-200 px-4 py-1.5 rounded'>
                     {searchedFilter.title}{" "}
                     <img className="cursor-pointer" src={assets.cross_icon} onClick={e=>setSearchedFilter(prev=>({...prev,title:""}))}/>
                   </span>
                 )}
                 {searchedFilter.location && (
-                  <span className='ml-2 inline-flex items-center gap-2.5 bg-red-200 border border-red-500 px-4 py-1.5 rounded'>
+                  <span className='ml-2 inline-flex items-center gap-2.5 bg-red-50 border border-red-200 px-4 py-1.5 rounded'>
                     {searchedFilter.location}{" "}
                     <img className="cursor-pointer" src={assets.cross_icon} onClick={e=>setSearchedFilter(prev=>({...prev,location:""}))}/>
                   </span>
@@ -41,7 +42,7 @@ const JobListing = () => {
           </div>
           {/* location filter  */}
           <div className='max-lg:hidden'>
-            <h4 className='font-medium text-lg py-4'>Search by Location</h4>
+            <h4 className='font-medium text-lg py-4 pt-14'>Search by Location</h4>
             <ul className='space-y-4 text-gray-600'>
               {JobLocations.map((location,index)=><li key={index} className='flex items-center gap-3'>
                 <input type="checkbox" className='scale-125'/>
@@ -50,6 +51,14 @@ const JobListing = () => {
             </ul>
           </div>
       </div>
+      {/* job listings  */}
+      <section className='w-full lg:w-3/4  text-gray-800 max-lg:px-4'>
+        <h3 className='font-medium text-3xl py-2' id='job-list'>Latest jobs</h3>
+        <p className='mb-8'>Get your desired job from top companies</p>
+        <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4'>
+          {jobsData.map((job,index)=><JobCard key={index} job={job}/>)}
+        </div>
+      </section>
     </div>
   );
 }
