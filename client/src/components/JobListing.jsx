@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { AppContext } from '../context/AppContext'
-import { assets } from '../assets/assets';
+import { assets, JobCategories, JobLocations } from '../assets/assets';
 
 const JobListing = () => {
     const {setSearchedFilter,setIsSearched,isSearched,searchedFilter}=useContext(AppContext)
@@ -29,6 +29,26 @@ const JobListing = () => {
               </div>
             </>
           )}
+          {/* category filter  */}
+          <div className='max-lg:hidden'>
+            <h4 className='font-medium text-lg py-4'>Search by Categories</h4>
+            <ul className='space-y-4 text-gray-600'>
+              {JobCategories.map((category,index)=><li key={index} className='flex items-center gap-3'>
+                <input type="checkbox" className='scale-125'/>
+                {category}
+              </li>)}
+            </ul>
+          </div>
+          {/* location filter  */}
+          <div className='max-lg:hidden'>
+            <h4 className='font-medium text-lg py-4'>Search by Location</h4>
+            <ul className='space-y-4 text-gray-600'>
+              {JobLocations.map((location,index)=><li key={index} className='flex items-center gap-3'>
+                <input type="checkbox" className='scale-125'/>
+                {location}
+              </li>)}
+            </ul>
+          </div>
       </div>
     </div>
   );
