@@ -6,6 +6,8 @@ import Navbar from './../components/Navbar';
 import { assets } from '../assets/assets';
 import kconvert from 'k-convert';
 import moment, {} from 'moment'
+import JobCard from './../components/JobCard';
+import Footer from '../components/Footer';
 
 const ApplyJob = () => {
   const {id}=useParams()
@@ -27,7 +29,7 @@ const ApplyJob = () => {
     <>
     <Navbar/>
     <div className='min-h-screen flex flex-col py-10 container px-4 2xl:px-20 mx-auto'>
-      <div className='bg-red-50 text-black rounded-lg w-full'>
+      <div className=' text-black rounded-lg w-full'>
         <div className='flex justify-center md:justify-between flex-wrap gap-8 bg-sky-50 px-14 py-20 border border-sky-400 rounded-xl'>
           <div className='flex flex-col md:flex-row items-center'>
             <img src={jobData?.companyId?.image} alt="company id" className='h-24 bg-white rounded-lg p-4 mr-4 max-md:mb-4 border' />
@@ -58,8 +60,24 @@ const ApplyJob = () => {
             <p className='mt-1 text-gray-600'>Posted {moment(jobData?.date).fromNow()}</p>
           </div>
         </div>
+        <div className='flex flex-col md:flex-row justify-between items-start mt-10'>
+        {/* left section  */}
+        <div className='w-full lg:w-2/3'>
+          <h2 className='font-bold text-2xl mb-4'>Job description</h2>
+          <div className='rich-text' dangerouslySetInnerHTML={{__html:jobData?.description}}></div>
+          <button className='mt-10 bg-blue-600 p-2.5 px-10 text-white rounded'>Apply Now</button>
+        </div>
+        {/* right section  */}
+        <div className='w-full lg:w-1/3 mt-10 lg:mt-0 lg:ml-8 space-y-5'>
+          <h2>More jobs from {jobData?.companyId?.name}</h2>
+          {jobs.filter(job=>job._id!==jobData?._id && job.companyId._id===jobData?.companyId._id)
+          .filter(job=>true).slice(0,4).map(job=>(
+            <JobCard job={job} key={job._id}/>))}
+        </div>
+        </div>
       </div>
     </div>
+    <Footer/>
     </>
     : <Loading />
 }

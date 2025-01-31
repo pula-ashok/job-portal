@@ -6,3 +6,25 @@
 * {
     font-family: Outfit;
 }
+
+@layer base {
+    html{
+        scroll-behavior: smooth;
+    }
+}
+::-webkit-scrollbar {
+    display: none;
+}
+.rich-text{
+    display: flex;
+    flex-direction: column;    
+}
+.rich-text p{
+    margin-bottom: 1rem;
+}
+.rich-text h2{
+    margin-bottom: 10px;
+}
+.rich-text ol{
+    margin-bottom: 1rem;
+}
