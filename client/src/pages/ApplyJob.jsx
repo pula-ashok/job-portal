@@ -24,7 +24,6 @@ const ApplyJob = () => {
       fetchJob()
     }
   },[id,jobs])
-  console.log(jobData)
   return jobData ?
     <>
     <Navbar/>
