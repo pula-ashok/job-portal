@@ -1,5 +1,7 @@
 import bcrypt from "bcrypt"
 import Company from './../models/Company.js';
+import {v2 as cloudinary} from "cloudinary";
+import generateToken from "../utils/generateToken.js";
 
 //register a new company
 export const registerCompany=async(req,res)=>{
@@ -15,8 +17,14 @@ export const registerCompany=async(req,res)=>{
         }
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password,salt);
+        const imageUpload = await cloudinary.uploader.upload(imageFile.path);
+        const {secure_url} = imageUpload;
+        const company = await Company.create({name,email,password:hashedPassword,image:secure_url});
+        res.json({success:true,
+            company:{_id:company._id,name:company.name,email:company.email,image:company.image},
+            token:generateToken(company._id)});
     } catch (error) {
-        
+        return res.json({success:false,message:error.message})
     }
 }
 
