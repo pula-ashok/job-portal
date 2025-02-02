@@ -21,7 +21,7 @@ export const webhooks=async(req,res)=>{
                 //create user in database
                 const userData={
                     _id:data.id,
-                    email:data.email_addresse[0].email,
+                    email:data.email_addresses[0].email,
                     name:data.first_name+" "+data.last_name,
                     image:data.image_url,
                     resume:"",
