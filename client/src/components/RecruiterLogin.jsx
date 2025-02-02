@@ -17,7 +17,7 @@ const RecruiterLogin = () => {
         }
     }
     useEffect(()=>{
-      console.log("ashok")
+      console.log("ashok checking")
       document.body.style.overflow="hidden";
       return ()=>{
       document.body.style.overflow="unset";
