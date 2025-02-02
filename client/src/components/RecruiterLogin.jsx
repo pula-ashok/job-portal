@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { assets } from '../assets/assets';
 import { AppContext } from '../context/AppContext';
 
@@ -9,7 +9,7 @@ const RecruiterLogin = () => {
     const [password, setPassword] = useState("");
     const [image, setImage] = useState(false);
     const [isTextDataSubmitted, setIsTextDataSubmitted] = useState(false)
-    const {setShowRecruiterLogin} = useContext(AppContext)
+    const {setShowRecruiterLogin,showRecruiterLogin} = useContext(AppContext)
     const onSubmitHandler=async(e)=>{
         e.preventDefault();
         if(state==="Sign Up" && !isTextDataSubmitted){
@@ -22,9 +22,21 @@ const RecruiterLogin = () => {
       document.body.style.overflow="unset";
       }
     },[])
+    const modalRef=useRef()
+    const handleClickOutside=e=>{
+      if(modalRef.current && !modalRef.current.contains(e.target)){
+        setShowRecruiterLogin(false)
+      }
+    }
+    useEffect(()=>{
+      document.addEventListener("mousedown",handleClickOutside)
+      return ()=>{
+        document.removeEventListener("mousedown",handleClickOutside)
+      }
+    },[showRecruiterLogin])
   return (
     <div className='absolute top-0 left-0 right-0 bottom-0 z-10 bg-black/30 back-blur-sm flex justify-center items-center'>
-        <form onSubmit={onSubmitHandler} className='relative bg-white p-10 rounded-xl text-slate-500'>
+        <form   ref={modalRef} onSubmit={onSubmitHandler} className='relative bg-white p-10 rounded-xl text-slate-500'>
             <h1 className='text-center text-2xl text-neutral-700 font-medium'>Recruiter {state}</h1>
             <p className='text-sm'>Welcome back! Please sign in to continue</p>
             {state==="Sign Up" && isTextDataSubmitted ? <> 
