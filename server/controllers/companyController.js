@@ -54,7 +54,12 @@ export const loginCompany=async(req,res)=>{
 
 //get company data
 export const getCompanyData=(req,res)=>{
-    
+    try {
+        const company = req.company;
+        return res.json({success:true,company})
+    } catch (error) {
+        return res.json({success:false,message:error.message})
+    }
 }
 
 //post a new job
