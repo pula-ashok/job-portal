@@ -85,7 +85,11 @@ export const getCompanyJobApplicants=(req,res)=>{
 
 //get company posted jobs
 export const getCompanyPostedJobs=(req,res)=>{
-    
+    try {
+        
+    } catch (error) {
+        
+    }
 }
 
 //change job application status
