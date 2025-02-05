@@ -8,6 +8,7 @@ import { webhooks } from './controllers/webhooks.js';
 import companyRouter from "./routes/companyRoutes.js";
 import connectCloudinary from "./config/cloudinary.js";
 import jobRouter from "./routes/jobRoutes.js";
+import userRouter from './routes/userRoutes.js';
 
 //initialize express app
 const app = express();
@@ -28,6 +29,7 @@ app.get("/debug-sentry", function mainHandler(req, res) {
 app.post("/webhooks",webhooks)
 app.use("/api/company",companyRouter)
 app.use("/api/jobs",jobRouter)
+app.use("/api/users",userRouter)
   
 
 //port
