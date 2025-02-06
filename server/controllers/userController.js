@@ -2,6 +2,7 @@
 import JobApplication from '../models/JobApplication.js';
 import User from './../models/User.js';
 import Job from './../models/Job.js';
+import {v2 as cloudinary} from "cloudinary";
 // get user data
 export const getUserData=async(req,res)=>{
         const userId = req?.auth?.userId;
@@ -58,6 +59,20 @@ export const getUserAppliedApplications=async(req,res)=>{
 }
 
 // update user profile (resume)
-export const updateUserResume=(req,res)=>{
-    
+export const updateUserResume=async(req,res)=>{
+    try {
+        const userId = req?.auth?.userId;
+        const resumeFile = req.resumeFile;
+        const userData = await User.findById(userId);
+        if(!resumeFile){
+            return res.json({success:false,message:"Resume not found"});
+        }
+        const resumeUpload = await cloudinary.uploader.upload(resumeFile.path);
+        const {secure_url} = resumeUpload;
+        userData.resume = secure_url;
+        await userData.save();
+        res.json({success:true,user:userData})
+    } catch (error) {
+        return res.json({success:false,message:error.message})
+    }
 }
