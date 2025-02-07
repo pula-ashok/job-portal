@@ -1,6 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { JobCategories, JobLocations } from '../assets/assets'
 import Quill from 'quill'
+import { AppContext } from './../context/AppContext';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const AddJob = () => {
   const [title, setTitle] = useState('')
@@ -18,8 +21,26 @@ const AddJob = () => {
       })
     }
   },[])
+  const {companyToken,backendUrl} = useContext(AppContext)
+  const onSubmitHandler=async(e)=>{
+    e.preventDefault();
+    try {
+      const description = quillRef.current.root.innerHTML;
+      const {data} = await axios.post(backendUrl +"/company/post-job",{title,description,location,category,level,salary},{headers:{token:companyToken}});
+      if(data.success){
+        toast.success("Job added successfully");
+        setTitle('');
+        quillRef.current.root.innerHTML = '';
+      }
+      else{
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
   return (
-    <form className='flex flex-col gap-3 items-start w-full container p-4 outline-none'>
+    <form onSubmit={onSubmitHandler} className='flex flex-col gap-3 items-start w-full container p-4 outline-none'>
         <div className='w-full'>
           <p className='mb-2'>Job Title</p>
           <input type="text" placeholder='Job Title' required value={title} onChange={e=>setTitle(e.target.value)} className='w-full max-w-lg px-3 py-2 border-2 border-gray-300 rounded'/>
@@ -54,7 +75,7 @@ const AddJob = () => {
           <p className='mb-2'>Job Salary</p>
           <input type="number" placeholder='2500' min={0} value={salary} onChange={e=>setSalary(e.target.value)} className='w-full px-3 py-2 border-2 border-gray-300 rounded sm:w-[120px]'/>
         </div>
-      <button className='w-28 py-3 mt-4 bg-black text-white rounded'>ADD</button>
+      <button className='w-28 py-3 mt-4 bg-black text-white rounded' type='submit'>ADD</button>
     </form>
   )
 }
