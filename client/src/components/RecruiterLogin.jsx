@@ -1,6 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { assets } from '../assets/assets';
 import { AppContext } from '../context/AppContext';
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const RecruiterLogin = () => {
     const [state, setState] = useState("Login");
@@ -9,11 +12,48 @@ const RecruiterLogin = () => {
     const [password, setPassword] = useState("");
     const [image, setImage] = useState(false);
     const [isTextDataSubmitted, setIsTextDataSubmitted] = useState(false)
-    const {setShowRecruiterLogin,showRecruiterLogin} = useContext(AppContext)
+    const {setShowRecruiterLogin,showRecruiterLogin,backendUrl,setCompanyToken,setCompanyData} = useContext(AppContext)
+    const navigate = useNavigate();
     const onSubmitHandler=async(e)=>{
         e.preventDefault();
         if(state==="Sign Up" && !isTextDataSubmitted){
-            setIsTextDataSubmitted(true)
+           return setIsTextDataSubmitted(true)
+        }
+        try {
+          if(state==="Login"){
+            const {data} =await axios.post(backendUrl+"/company/login",{email,password});
+            if(data.success){
+              setCompanyToken(data?.token);
+              setCompanyData(data?.company);
+              localStorage.setItem("companyToken",data?.token);
+              setShowRecruiterLogin(false)
+              navigate("/dashboard")
+            }
+            else{
+              toast.error(data.message)
+            }
+          }
+          else{
+            const formData = new FormData();
+            formData.append("name",name);
+            formData.append("email",email);
+            formData.append("password",password);
+            formData.append("image",image);
+            const {data} =await axios.post(backendUrl+"/company/register",formData);
+            if(data.success){
+              setCompanyToken(data?.token);
+              setCompanyData(data?.company);
+              localStorage.setItem("companyToken",data?.token);
+              setShowRecruiterLogin(false)
+              navigate("/dashboard")
+            }
+            else{
+              toast.error(data.message)
+            }
+          }
+          
+        } catch (error) {
+          toast.error(error.message)
         }
     }
     useEffect(()=>{
@@ -65,8 +105,8 @@ const RecruiterLogin = () => {
             </>}
           {state==="Login" &&  <p className='text-sm text-blue-600 mt-4 cursor-pointer'>Forgot password?</p>}
             <button type="submit" className='w-full bg-blue-600 text-white px-4 py-2 rounded-full mt-4'>{state==='Login'?'Login':isTextDataSubmitted?'Sign Up':"Next"}</button>
-           {state==="Login"? <p  className='mt-5 text-center'>Don't have an account? <span className='text-blue-600 cursor-pointer' onClick={()=>setState('Sign Up')} >Sign up</span></p>
-           : <p className='mt-5 text-center'>Already have an account? <span className='text-blue-600 cursor-pointer' onClick={()=>setState('Login')}>Login</span></p>}
+           {state==="Login"? <p  className='mt-5 text-center'>Don't have an account? <span className='text-blue-600 cursor-pointer' onClick={()=>{setState('Sign Up');setIsTextDataSubmitted(false)}} >Sign up</span></p>
+           : <p className='mt-5 text-center'>Already have an account? <span className='text-blue-600 cursor-pointer' onClick={()=>{setState('Login');setIsTextDataSubmitted(false)}}>Login</span></p>}
           <img onClick={()=>setShowRecruiterLogin(false)}  src={assets.cross_icon} alt="cross" className='top-5 right-5 absolute cursor-pointer' />
         </form>
     </div>
