@@ -105,8 +105,8 @@ const RecruiterLogin = () => {
             </>}
           {state==="Login" &&  <p className='text-sm text-blue-600 mt-4 cursor-pointer'>Forgot password?</p>}
             <button type="submit" className='w-full bg-blue-600 text-white px-4 py-2 rounded-full mt-4'>{state==='Login'?'Login':isTextDataSubmitted?'Sign Up':"Next"}</button>
-           {state==="Login"? <p  className='mt-5 text-center'>Don't have an account? <span className='text-blue-600 cursor-pointer' onClick={()=>setState('Sign Up')} >Sign up</span></p>
-           : <p className='mt-5 text-center'>Already have an account? <span className='text-blue-600 cursor-pointer' onClick={()=>setState('Login')}>Login</span></p>}
+           {state==="Login"? <p  className='mt-5 text-center'>Don't have an account? <span className='text-blue-600 cursor-pointer' onClick={()=>{setState('Sign Up');setIsTextDataSubmitted(false)}} >Sign up</span></p>
+           : <p className='mt-5 text-center'>Already have an account? <span className='text-blue-600 cursor-pointer' onClick={()=>{setState('Login');setIsTextDataSubmitted(false)}}>Login</span></p>}
           <img onClick={()=>setShowRecruiterLogin(false)}  src={assets.cross_icon} alt="cross" className='top-5 right-5 absolute cursor-pointer' />
         </form>
     </div>

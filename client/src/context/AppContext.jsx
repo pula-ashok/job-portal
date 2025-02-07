@@ -11,7 +11,7 @@ const AppContextProvider = (props) => {
   const [jobs, setJobs] = useState([])
   const [showRecruiterLogin, setShowRecruiterLogin] = useState(false)
   const [companyToken, setCompanyToken] = useState(null)
-  const [getCompanyData, setCompanyData] = useState(null)
+  const [companyData, setCompanyData] = useState(null)
   const backendUrl = import.meta.env.VITE_BACKEND_URL
   //function to fetch jobs
   const fetchJobs=async()=>{
@@ -30,6 +30,7 @@ const AppContextProvider = (props) => {
       })
       if(data.success){
         setCompanyData(data.company)
+        // console.log(data)
       }
       else{
         toast.error(data.message)
@@ -53,7 +54,7 @@ const AppContextProvider = (props) => {
     backendUrl,
     companyToken,
     setCompanyToken,
-    getCompanyData,
+    companyData,
     setCompanyData
   };
   return (
