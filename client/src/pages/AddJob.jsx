@@ -18,8 +18,14 @@ const AddJob = () => {
       })
     }
   },[])
+  const addJobHandler=async(e)=>{
+    e.preventDefault()
+    const content=quillRef.current.root.innerHTML
+    console.log(content)
+  }
+  
   return (
-    <form className='flex flex-col gap-3 items-start w-full container p-4 outline-none'>
+    <form className='flex flex-col gap-3 items-start w-full container p-4 outline-none' onSubmit={addJobHandler}>
         <div className='w-full'>
           <p className='mb-2'>Job Title</p>
           <input type="text" placeholder='Job Title' required value={title} onChange={e=>setTitle(e.target.value)} className='w-full max-w-lg px-3 py-2 border-2 border-gray-300 rounded'/>
@@ -54,7 +60,7 @@ const AddJob = () => {
           <p className='mb-2'>Job Salary</p>
           <input type="number" placeholder='2500' min={0} value={salary} onChange={e=>setSalary(e.target.value)} className='w-full px-3 py-2 border-2 border-gray-300 rounded sm:w-[120px]'/>
         </div>
-      <button className='w-28 py-3 mt-4 bg-black text-white rounded'>ADD</button>
+      <button  type='submit' className='w-28 py-3 mt-4 bg-black text-white rounded'>ADD</button>
     </form>
   )
 }
