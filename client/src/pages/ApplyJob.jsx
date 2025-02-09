@@ -10,12 +10,14 @@ import JobCard from './../components/JobCard';
 import Footer from '../components/Footer';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { useAuth } from '@clerk/clerk-react';
 
 const ApplyJob = () => {
   const {id}=useParams()
   const {jobs,backendUrl,userData,userApplications}=useContext(AppContext)
   const [jobData, setJobData] = useState(null)
   const navigate = useNavigate()
+  const {getToken} =useAuth()
   //fetch job using id
   const fetchJob=async()=>{
     try {
@@ -41,6 +43,15 @@ const ApplyJob = () => {
       if(!userData?.resume){
         navigate("/applications")
         return toast.error("Upload resume to apply job")
+      }
+      const token = await getToken();
+
+      const {data} = await axios.post(backendUrl+"/users/apply-job",{jobId:jobData?._id},{headers:{Authorization:`Bearer ${token}`}})
+      if(data.success){
+        toast.success(data.message)
+      }
+      else{
+        toast.error(data.message)
       }
     } catch (error) {
       toast.error(error.message)
