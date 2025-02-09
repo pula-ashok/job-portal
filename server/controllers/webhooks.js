@@ -26,7 +26,10 @@ export const webhooks=async(req,res)=>{
                     image:data.image_url,
                     resume:"",
                 }
-                await User.create(userData)
+                const user = await User.findOne({email:data.email_addresse[0].email});
+                if(!user){
+                    await User.create(userData)
+                }
                 res.json({})
                 break;
             case "user.updated":

@@ -62,7 +62,7 @@ export const getUserAppliedApplications=async(req,res)=>{
 export const updateUserResume=async(req,res)=>{
     try {
         const userId = req?.auth?.userId;
-        const resumeFile = req.resumeFile;
+        const resumeFile = req.file;
         const userData = await User.findById(userId);
         if(!resumeFile){
             return res.json({success:false,message:"Resume not found"});
@@ -71,7 +71,7 @@ export const updateUserResume=async(req,res)=>{
         const {secure_url} = resumeUpload;
         userData.resume = secure_url;
         await userData.save();
-        res.json({success:true,user:userData})
+        res.json({success:true,user:userData,message:"Resume uploaded successfully"})
     } catch (error) {
         return res.json({success:false,message:error.message})
     }
