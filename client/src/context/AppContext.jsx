@@ -15,7 +15,18 @@ const AppContextProvider = (props) => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL
   //function to fetch jobs
   const fetchJobs=async()=>{
-    setJobs(jobsData)
+    try {
+      const {data} =await axios.get(backendUrl+"/jobs");
+      if(data?.success){
+        setJobs(data?.jobs)
+        console.log(jobs)
+      }
+      else{
+        toast.error(data.message)
+      }      
+    } catch (error) {
+      toast.error(error.message)
+    }
   }
   useEffect(()=>{fetchJobs()},[])
   useEffect(()=>{
