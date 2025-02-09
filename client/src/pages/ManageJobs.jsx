@@ -1,10 +1,40 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { manageJobsData } from '../assets/assets'
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { AppContext } from '../context/AppContext';
+import axios from 'axios';
 
 const ManageJobs = () => {
   const navigate=useNavigate()
+  const [jobs, setJobs] = useState([])
+  const {companyToken,backendUrl} = useContext(AppContext)
+  const fetchCompanyJobs=async()=>{
+    try {
+      const {data} =await axios.get(backendUrl+"/company/list-jobs",{headers:{token:companyToken}})
+      if(data.success){
+        setJobs(data?.jobsData)
+      }
+      else{
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+  useEffect(()=>{if(companyToken){fetchCompanyJobs()}},[companyToken])
+  const chanageJobVisibility=async(id)=>{
+    try {
+      const {data} = await axios.post(backendUrl+"/company/change-visibility",{id},{headers:{token:companyToken}})
+      if(data.success){
+        toast.success(data.message)
+        fetchCompanyJobs()
+      }
+     } catch (error) {
+      toast.error(error.message)
+    }
+  }
   return (
     <div className='container p-4 max-w-5xl'>
       <div className='overflow-x-auto'>
@@ -20,7 +50,7 @@ const ManageJobs = () => {
             </tr>
           </thead>
           <tbody>
-            {manageJobsData.map((job,index)=>
+            {jobs?.map((job,index)=>
             <tr key={index} className='text-gray-700 '>
               <td className='py-2 px-4 border-b  max-sm:hidden'>{index+1}</td>
               <td className='py-2 px-4 border-b'>{job.title}</td>
@@ -28,7 +58,7 @@ const ManageJobs = () => {
               <td className='py-2 px-4 border-b max-sm:hidden'>{job.location}</td>
               <td className='py-2 px-4 border-b text-center'>{job.applicants}</td>
               <td className='py-2 px-4 border-b'>
-                <input type="checkbox" className='scale-125 ml-4'/>
+                <input type="checkbox" className='scale-125 ml-4' checked={job.visible} onChange={()=>{chanageJobVisibility(job._id)}}/>
               </td>
             </tr>)}
           </tbody>

@@ -22,7 +22,7 @@ const JobListing = () => {
       const matchesLocation=job=> selectedLocations.length===0 || selectedLocations.includes(job.location)
       const matchesTitle=job=>searchedFilter.title==="" || job.title.toLowerCase().includes(searchedFilter.title.toLowerCase())
       const matchesSearchedLocation=job=>searchedFilter.location==="" || job.location.toLowerCase().includes(searchedFilter.location.toLowerCase())
-      const newFilteredJobs=jobs.slice().reverse().filter(job=>matchesCategory(job) && matchesLocation(job) && matchesTitle(job) && matchesSearchedLocation(job))
+      const newFilteredJobs=jobs?.slice().reverse().filter(job=>matchesCategory(job) && matchesLocation(job) && matchesTitle(job) && matchesSearchedLocation(job))
       setFilteredJobs(newFilteredJobs)
       setCurrentPage(1)
     },[selectedCategories,selectedLocations,jobs,searchedFilter])
