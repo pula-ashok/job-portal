@@ -8,21 +8,18 @@ import kconvert from 'k-convert';
 import moment, {} from 'moment'
 import JobCard from './../components/JobCard';
 import Footer from '../components/Footer';
+import axios from 'axios';
 
 const ApplyJob = () => {
   const {id}=useParams()
   const {jobs}=useContext(AppContext)
   const [jobData, setJobData] = useState(null)
   const fetchJob=async()=>{
-    const data=jobs.filter(job=>job._id===id)
-    if(data.length !==0){
-      setJobData(data[0])
-    }
+    const {data} = await axios.get("http://localhost:5000/api/job/"+id)
+    setJobData(data.job)
   }
   useEffect(()=>{
-    if(jobs.length>0){
       fetchJob()
-    }
   },[id,jobs])
   return jobData ?
     <>
