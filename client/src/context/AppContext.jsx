@@ -89,7 +89,8 @@ const AppContextProvider = (props) => {
     companyToken,
     setCompanyToken,
     companyData,
-    setCompanyData
+    setCompanyData,
+    userData,setUserData,userApplications,setUserApplications
   };
   return (
     <AppContext.Provider value={value}>
