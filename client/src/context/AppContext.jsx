@@ -71,9 +71,24 @@ const AppContextProvider = (props) => {
       toast.error(error.message)
     }
   }
+  const fetchUserApplications=async()=>{
+    try {
+      const token = await getToken();
+      const {data} = await axios.get(backendUrl+"/users/applications",{headers:{Authorization:`Bearer ${token}`}})
+      if(data.success){
+        setUserApplications(data.applications)
+      }
+      else{
+        toast.error(data.message)
+      }      
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
   useEffect(()=>{
     if(user){
-      fetchUserData()
+      fetchUserData();
+      fetchUserApplications();
     }
   },[user])
   const value = {
