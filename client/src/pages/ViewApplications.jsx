@@ -23,7 +23,17 @@ const ViewApplications = () => {
       fetchCompanyApplicants()
     }
   },[companyToken])
-  console.log(applicants)
+  const changeApplicationStatus=async(id,status)=>{
+    try {
+      const {data} = await axios.post(backendUrl+"/company/change-status",{id,status},{headers:{token:companyToken}});
+      if(data.success){
+        toast.success(data.message)
+        fetchCompanyApplicants()
+      }
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
   return applicants.length>0?
     <div className='container mx-auto p-4'>
       <div>
@@ -54,13 +64,17 @@ const ViewApplications = () => {
                 </a>
               </td>
               <td className='py-2 px-4 border-b relative'>
+               {
+                application?.status==='Pending'?
                 <div className='relative inline-block text-left group'>
                   <button className='text-gray-500 action-button'>...</button>
                   <div className='hidden z-10 absolute right-0 md:left-0  w-32 bg-white border border-gray-200  group-hover:block'>
-                    <button  className='block text-left px-4 py-2 text-blue-500 hover:bg-gray-100 w-full'>Accept</button>
-                    <button className='block text-left px-4 py-2 text-red-500 hover:bg-gray-100 w-full'>Reject</button>
+                    <button  className='block text-left px-4 py-2 text-blue-500 hover:bg-gray-100 w-full' onClick={()=>changeApplicationStatus(application?._id,"Accepted")}>Accept</button>
+                    <button className='block text-left px-4 py-2 text-red-500 hover:bg-gray-100 w-full' onClick={()=>changeApplicationStatus(application?._id,"Rejected")}>Reject</button>
                   </div>
                 </div>
+                :<div>{application?.status}</div>
+               }
               </td>
             </tr>
             )}
