@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Navbar from './../components/Navbar';
 import { assets, jobsApplied } from '../assets/assets';
 import moment from 'moment';
@@ -10,9 +10,15 @@ import axios from 'axios';
 const Applications = () => {
   const [isEdit, setIsEdit] = useState(false)
   const [resume, setResume] = useState(null)
-  const {userData,userApplications,backendUrl,fetchUserData} =useContext(AppContext)
+  const {userData,userApplications,backendUrl,fetchUserData,fetchUserApplications} =useContext(AppContext)
   const {getToken} = useAuth();
   const {user} = useUser();
+  console.log(userApplications,"ashok")
+  useEffect(()=>{
+    if(user){
+      fetchUserApplications()
+    }
+  },[user])
   const updateResume=async()=>{
       const formData = new FormData()
       formData.append("resume",resume)
@@ -65,14 +71,14 @@ const Applications = () => {
         </thead>
         <tbody>
             {
-              jobsApplied.map((job,index)=>true?
+              userApplications?.map((job,index)=>true?
               <tr key={index}>
                 <td className='py-3 px-4 flex items-center gap-2 border-b'>
-                  <img src={job.logo} alt="company logo" className='h-8 w-8'/>
+                  <img src={job?.companyId?.image} alt="company logo" className='h-8 w-8'/>
                   {job.company}
                 </td>
-                <td className='py-2 px-4 border-b'>{job.title}</td>
-                <td className='py-2 px-4 border-b max-sm:hidden'>{job.location}</td>
+                <td className='py-2 px-4 border-b'>{job?.jobId?.category}</td>
+                <td className='py-2 px-4 border-b max-sm:hidden'>{job?.jobId?.location}</td>
                 <td className='py-2 px-4 border-b max-sm:hidden'>{moment(job.date).format("ll")}</td>
                 <td className='py-2 px-4 border-b'>
                   <span className={`${job.status==="Accepted"?'bg-green-100':job.status==="Rejected"?'bg-red-100':'bg-blue-100'} px-4 py-1 rounded-lg text-${job.status==="Accepted"?'green-600':job.status==="Rejected"?'red-600':'yellow-600'} px-4 py-1 rounded-lg`}>{job.status}</span>
