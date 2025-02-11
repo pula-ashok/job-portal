@@ -13,7 +13,6 @@ const Applications = () => {
   const {userData,userApplications,backendUrl,fetchUserData,fetchUserApplications} =useContext(AppContext)
   const {getToken} = useAuth();
   const {user} = useUser();
-  console.log(userApplications,"ashok")
   useEffect(()=>{
     if(user){
       fetchUserApplications()
