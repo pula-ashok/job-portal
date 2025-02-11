@@ -22,7 +22,6 @@ const AppContextProvider = (props) => {
       const {data} =await axios.get(backendUrl+"/jobs");
       if(data?.success){
         setJobs(data?.jobs)
-        console.log(jobs)
       }
       else{
         toast.error(data.message)
@@ -44,7 +43,6 @@ const AppContextProvider = (props) => {
       })
       if(data.success){
         setCompanyData(data.company)
-        // console.log(data)
       }
       else{
         toast.error(data.message)

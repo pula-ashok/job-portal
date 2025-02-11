@@ -14,8 +14,9 @@ import { useAuth } from '@clerk/clerk-react';
 
 const ApplyJob = () => {
   const {id}=useParams()
-  const {jobs,backendUrl,userData,userApplications}=useContext(AppContext)
+  const {jobs,backendUrl,userData,userApplications,fetchUserApplications}=useContext(AppContext)
   const [jobData, setJobData] = useState(null)
+  const [alreadyApplied, setAlreadyApplied] = useState(false)
   const navigate = useNavigate()
   const {getToken} =useAuth()
   //fetch job using id
@@ -49,6 +50,7 @@ const ApplyJob = () => {
       const {data} = await axios.post(backendUrl+"/users/apply-job",{jobId:jobData?._id},{headers:{Authorization:`Bearer ${token}`}})
       if(data.success){
         toast.success(data.message)
+        fetchUserApplications();
       }
       else{
         toast.error(data.message)
@@ -57,6 +59,16 @@ const ApplyJob = () => {
       toast.error(error.message)
     }
   }
+  const checkAlreadyApplied=()=>{
+    const applied = userApplications.some(application=>application?.jobId?._id===id)
+    setAlreadyApplied(applied)
+  }
+  useEffect(()=>{
+    if(userApplications.length>0 && jobData){
+      checkAlreadyApplied()
+    }
+  },[userApplications,jobData,id])
+
   return jobData ?
     <>
     <Navbar/>
@@ -88,7 +100,7 @@ const ApplyJob = () => {
             </div>
           </div>
           <div className='flex  flex-col justify-center text-end text-sm max-md:mx-auto max-md:text-center'>
-            <button className='bg-blue-600 p-2.5 px-10 text-white rounded' onClick={applyJobHandler}>Apply Now</button>
+            <button className='bg-blue-600 p-2.5 px-10 text-white rounded' onClick={applyJobHandler} disabled={alreadyApplied}>{alreadyApplied?'Already Applied':'Apply Now'}</button>
             <p className='mt-1 text-gray-600'>Posted {moment(jobData?.date).fromNow()}</p>
           </div>
         </div>
@@ -97,7 +109,7 @@ const ApplyJob = () => {
         <div className='w-full lg:w-2/3'>
           <h2 className='font-bold text-2xl mb-4'>Job description</h2>
           <div className='rich-text' dangerouslySetInnerHTML={{__html:jobData?.description}}></div>
-          <button className='mt-10 bg-blue-600 p-2.5 px-10 text-white rounded' onClick={applyJobHandler}>Apply Now</button>
+          <button className='mt-10 bg-blue-600 p-2.5 px-10 text-white rounded' onClick={applyJobHandler} disabled={alreadyApplied}>{alreadyApplied?'Already Applied':'Apply Now'}</button>
         </div>
         {/* right section  */}
         <div className='w-full lg:w-1/3 mt-10 lg:mt-0 lg:ml-8 space-y-5'>
