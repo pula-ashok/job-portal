@@ -96,8 +96,17 @@ export const getCompanyPostedJobs=async(req,res)=>{
 }
 
 //get job applicants
-export const getCompanyJobApplicants=(req,res)=>{
-    
+export const getCompanyJobApplicants=async(req,res)=>{
+    try {
+        const companyId = req?.company?._id;
+        //find job application for the company and populate user and job details
+        const jobApplications = await JobApplication.find({
+          companyId,
+        }).populate("userId", "name image resume").populate("jobId","title location category level salary").exec();
+        return res.json({success:true,jobApplications})
+    } catch (error) {
+        return res.json({success:false,message:error.message})
+    }
 }
 
 //change job application status

@@ -18,7 +18,7 @@ companyRouter.get("/data",protectCompany ,getCompanyData)
 companyRouter.post("/post-job",protectCompany ,postJob)
 
 //get applicants for a job
-companyRouter.post("/applicants",protectCompany ,getCompanyJobApplicants)
+companyRouter.get("/applicants",protectCompany ,getCompanyJobApplicants)
 
 //get company job list
 companyRouter.get("/list-jobs",protectCompany ,getCompanyPostedJobs)
